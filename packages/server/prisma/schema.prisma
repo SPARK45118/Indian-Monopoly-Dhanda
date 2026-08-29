@@ -1,0 +1,85 @@
+// Prisma Schema for DHANDHA
+// Run: npx prisma db push
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(uuid())
+  guestId     String   @unique // persistent ID stored in localStorage
+  name        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  gamePlayers GamePlayer[]
+  stats       PlayerStats?
+}
+
+model Game {
+  id          String     @id @default(uuid())
+  roomCode    String     @unique
+  status      GameStatus @default(WAITING)
+  startedAt   DateTime?
+  endedAt     DateTime?
+  createdAt   DateTime   @default(now())
+  turnCount   Int        @default(0)
+
+  players     GamePlayer[]
+  events      GameEventLog[]
+}
+
+enum GameStatus {
+  WAITING
+  PLAYING
+  FINISHED
+}
+
+model GamePlayer {
+  id           String  @id @default(uuid())
+  gameId       String
+  userId       String
+  characterId  String
+  playerOrder  Int     // 0-3
+  finalMoney   Int?
+  finalNetWorth Int?
+  propertiesBought Int @default(0)
+  tradesCompleted  Int @default(0)
+  didWin       Boolean @default(false)
+  didBankrupt  Boolean @default(false)
+
+  game Game @relation(fields: [gameId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([gameId, userId])
+}
+
+model GameEventLog {
+  id        String   @id @default(uuid())
+  gameId    String
+  eventType String
+  playerId  String?
+  data      Json?
+  createdAt DateTime @default(now())
+
+  game Game @relation(fields: [gameId], references: [id])
+}
+
+model PlayerStats {
+  id               String @id @default(uuid())
+  userId           String @unique
+  gamesPlayed      Int    @default(0)
+  gamesWon         Int    @default(0)
+  totalMoneyEarned BigInt @default(0)
+  propertiesBought Int    @default(0)
+  tradesCompleted  Int    @default(0)
+  bankruptcyCount  Int    @default(0)
+  avgGameDuration  Int    @default(0) // in seconds
+
+  user User @relation(fields: [userId], references: [id])
+}

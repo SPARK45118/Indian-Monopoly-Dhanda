@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "baseUrl": ".",
+    "outDir": "dist",
+    "strict": true,
+    "noEmit": true,
+    "paths": {
+      "@dhandha/shared": ["../shared/src/index.ts"],
+      "@dhandha/shared/*": ["../shared/src/*"],
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src", "index.html"],
+  "exclude": ["node_modules", "dist"]
+}
+

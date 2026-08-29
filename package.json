@@ -1,0 +1,21 @@
+{
+  "name": "dhandha",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=packages/server\" \"npm run dev --workspace=packages/client\" --names \"server,client\" --prefix-colors \"cyan,magenta\"",
+    "build": "npm run build --workspace=packages/shared && npm run build --workspace=packages/server && npm run build --workspace=packages/client",
+    "test": "npm run test --workspace=packages/server",
+    "db:push": "npm run db:push --workspace=packages/server",
+    "db:generate": "npm run db:generate --workspace=packages/server",
+    "db:studio": "npm run db:studio --workspace=packages/server",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

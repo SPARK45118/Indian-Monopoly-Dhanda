@@ -1,0 +1,380 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Base Styles — Red & Black Theme ────────────────────────── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root,
+.app-root {
+  height: 100%;
+  min-height: 100vh;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #09090b;
+  color: #fafafa;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #09090b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+.write-vertical {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GAMEPLAY SCREEN & LANDSCAPE BOARD CONTAINER (100vh Fit)
+   ═══════════════════════════════════════════════════════════════ */
+.game-page-container {
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.game-board-wrapper {
+  width: min(1600px, 98vw);
+  height: calc(100vh - 64px);
+  max-height: calc(100vh - 64px);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   14 × 8 LANDSCAPE PERIMETER CSS GRID
+   14 Columns × 8 Rows = 40 Perimeter Tiles, 12 × 6 Center Stage
+   ═══════════════════════════════════════════════════════════════ */
+.board-grid {
+  display: grid;
+  grid-template-columns: 1.35fr repeat(12, 1fr) 1.35fr;
+  grid-template-rows: 1.3fr repeat(6, 1fr) 1.3fr;
+  width: 100%;
+  height: 100%;
+  border: 3px solid #27272a;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 30px rgba(220, 38, 38, 0.08);
+  background: #09090b;
+  position: relative;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   12 × 6 CENTER GAME STAGE (Inner Interactive Arena)
+   ═══════════════════════════════════════════════════════════════ */
+.board-center {
+  grid-column: 2 / 14;
+  grid-row: 2 / 8;
+  background: radial-gradient(ellipse at center, #141417 0%, #0c0c0e 65%, #08080a 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #27272a;
+  border-radius: 12px;
+  margin: 4px;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.85);
+}
+
+/* Overlay panels inside board center */
+.overlay-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: 0.5rem 1rem;
+  background: rgba(9,9,11,0.85);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid #27272a;
+  border-top: 1px solid #27272a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 20;
+}
+.overlay-panel.top-panel { top: 0; }
+.overlay-panel.bottom-panel { bottom: 0; }
+
+/* Tabletop subtle pattern */
+.board-center::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PERIMETER BOARD TILES
+   ═══════════════════════════════════════════════════════════════ */
+.board-tile {
+  border: 1px solid #27272a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  background: #18181b;
+  color: #fafafa;
+}
+
+.board-tile:hover {
+  background: #27272a;
+  border-color: #dc2626;
+  z-index: 20;
+}
+
+.board-tile.corner-tile {
+  background: #121215;
+  border-color: #27272a;
+}
+
+/* Property color band */
+.tile-color-band {
+  height: 8px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.tile-top .tile-color-band {
+  order: 2;
+  margin-top: auto;
+}
+
+.tile-left {
+  flex-direction: row;
+}
+
+.tile-left .tile-color-band {
+  width: 8px;
+  height: 100%;
+  order: 2;
+  margin-left: auto;
+}
+
+.tile-right {
+  flex-direction: row;
+}
+
+.tile-right .tile-color-band {
+  width: 8px;
+  height: 100%;
+  order: -1;
+}
+
+/* Active turn tile highlight */
+.tile-has-current-player {
+  box-shadow: 0 0 0 2px #dc2626 inset, 0 0 12px rgba(220, 38, 38, 0.4);
+}
+
+/* ─── Player Tokens ──────────────────────────────────────────── */
+@keyframes tokenHop {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-16px) scale(1.35); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.animate-token-hop {
+  animation: tokenHop 0.22s ease-out;
+}
+
+.player-token {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2px solid #fafafa;
+  font-size: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+  z-index: 25;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+/* ─── Panels ─────────────────────────────────────────────────── */
+.glass-panel {
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 12px;
+  color: #fafafa;
+}
+
+.glass-panel-gold {
+  background: #18181b;
+  border: 1px solid #dc2626;
+  border-radius: 12px;
+  color: #fafafa;
+}
+
+/* ─── Dice ───────────────────────────────────────────────────── */
+.dice-face {
+  width: 54px;
+  height: 54px;
+  background: #18181b;
+  border-radius: 12px;
+  border: 2px solid #3f3f46;
+  display: grid;
+  grid-template-areas:
+    "a . b"
+    "c d e"
+    "f . g";
+  padding: 8px;
+  gap: 4px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.8);
+  color: #fafafa;
+}
+
+.dice-dot {
+  width: 9px;
+  height: 9px;
+  background: #dc2626;
+  border-radius: 50%;
+  align-self: center;
+  justify-self: center;
+}
+
+.dice-rolling {
+  animation: diceRoll 0.6s ease-in-out;
+}
+
+/* ─── Money Display ──────────────────────────────────────────── */
+.money-display {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+}
+
+.money-positive {
+  color: #22c55e;
+}
+
+.money-negative {
+  color: #ef4444;
+}
+
+/* ─── Buttons ────────────────────────────────────────────────── */
+.btn-primary {
+  background: #dc2626;
+  color: #fafafa;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  padding: 12px 28px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);
+}
+
+.btn-primary:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.45);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: #27272a;
+  color: #fafafa;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid #3f3f46;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-secondary:hover {
+  background: #3f3f46;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-success {
+  background: #22c55e;
+  color: #fafafa;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  padding: 12px 28px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-success:hover {
+  background: #16a34a;
+}
+
+.btn-success:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
